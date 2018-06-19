@@ -8,7 +8,7 @@ class Ball:
 		self.velocity = np.zeros(2)
 		self.is_in_possession = False
 
-	def set_acceleration(self,acc):
+	def set_acceleration(self,acc=np.zeros(2)):
 		assert self.is_in_possession or (acc==np.zeros(2)).all(),'No one has possession of the ball, it cannot accelerate.'
 		self.acceleration = acc
 

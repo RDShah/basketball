@@ -11,3 +11,6 @@ def clip_norm(vec,mag):
 
 def random_location_on_court():
 	return np.random.uniform([-14,-7.5],[14,7.5])
+
+def cos_theta(a,b):
+	return a.dot(b)/(np.linalg.norm(a)*np.linalg.norm(b))

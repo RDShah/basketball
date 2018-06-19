@@ -14,6 +14,7 @@ class Game:
 
 	def step():
 		j = self.index_of_player_with_possession()
+		if j == -1: self.ball.set_acceleration() #default is 0
 
 		list_of_summaries = [player.get_summary() for player in self.players] # get summary statistics
 

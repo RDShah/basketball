@@ -25,11 +25,11 @@ class Player(object):
         self.velocity = clip_norm(self.velocity,self.max_velocity)
 
     def action(self,player_summaries,ball_summary,ball): # None is passed if the player doesn't have possession
-        self.acceleration = strategies.basic_forces(self.get_summary(),player_summaries,ball_summary)
+        self.acceleration = strategies.basic_forces(self.get_summary(),player_summaries,ball_summary,ball)
         self.acceleration = clip_norm(self.acceleration,self.max_acceleration)
 
     def get_summary(self):
-        return {'position':self.position,'velocity':self.velocity}
+        return {'position':self.position,'velocity':self.velocity,'team':self.home}
 
 
 
