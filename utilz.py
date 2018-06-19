@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def clip_norm(vec,mag):
 	return vec / max(1,np.linalg.norm(vec)/mag)
 
