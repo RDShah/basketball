@@ -2,6 +2,7 @@ from constants import dt
 from ball import Ball
 import numpy as np
 from utilz import clip_norm,random_location_on_court
+import strategies
 
 class Player(object):
     def __init__(self,home_or_away,
@@ -23,8 +24,8 @@ class Player(object):
 
         self.velocity = clip_norm(self.velocity,self.max_velocity)
 
-    def action(self,player_summaries,ball_summary,has_ball):
-        pass #set acc to something
+    def action(self,player_summaries,ball_summary,ball): # None is passed if the player doesn't have possession
+        self.acceleration = strategies.basic_forces(self.get_summary(),player_summaries,ball_summary)
         self.acceleration = clip_norm(self.acceleration,self.max_acceleration)
 
     def get_summary(self):
