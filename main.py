@@ -16,7 +16,8 @@ class Game:
 		list_of_summaries = [player.get_summary() for player in self.players] # get summary statistics
 
 		for i in range(len(self.players)):
-			players[i].make_move(list_of_summaries[:i]+list_of_summaries[i+1:]) # decide acceleration
-			if i == j: self.ball.set_acceleration(players[j].set_balls_acceleration(list_of_summaries[:i]+list_of_summaries[i+1:])) #if has possession, decide balls acceleration
+			players[i].make_move(list_of_summaries[:i]+list_of_summaries[i+1:],self.ball.get_summary()) # decide acceleration
+			if i == j:
+			self.ball.set_acceleration(players[j].set_balls_acceleration(list_of_summaries[:i]+list_of_summaries[i+1:],self.ball.get_summary())) #if has possession, decide balls acceleration
 			players[i].step() # update posision and velocity
 
