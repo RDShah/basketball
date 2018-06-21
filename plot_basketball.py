@@ -5,7 +5,9 @@ import random
 import main
 
 fig = plt.figure()
+plt.axis('off')
 pause = False
+iteration = 0
 
 # first five are home team, second five are away team, last is ball
 players = [plt.Circle((200 + random.uniform(-50,50), 300 + random.uniform(-50,50)), 10, fc='r') for _ in range(5)]
@@ -33,12 +35,14 @@ def onClick(event):
     pause ^= True
 
 def animate(i, location_generator):
-	curr_location = location_generator(i)
+	global iteration
+	curr_location = location_generator(iteration)
 	curr_index = 0
 	if not pause:
 		for player in players:
 			player.center = (x_conversion(curr_location[curr_index][0]), y_conversion(curr_location[curr_index][1]))
 			curr_index += 1
+		iteration += 1
 	return players,
 
 
