@@ -27,10 +27,15 @@ def basic_forces(own,player_summaries,ball_summary,ball):
 	if not in_bounds(own_summary['position']):
 		return -own_summary['position']
 
+	coef = 4 if np.linalg.norm(ball_summary['velocity'])<15 else 1000
 	for summary in player_summaries:
 		acc += 4*(-summary['position']+own_summary['position'])/dist(summary['position'],own_summary['position'])**3
 	if not own.passing:
-		acc += 4*(ball_summary['position']-own_summary['position'])/dist(ball_summary['position'],own_summary['position'])**3
+		if coef == 4:
+			acc += coef*(ball_summary['position']-own_summary['position'])/dist(ball_summary['position'],own_summary['position'])**3
+		else:
+			target = ball_summary['position'] + (own_summary['position']-ball_summary['position']).dot(ball_summary['velocity'])/np.linalg.norm(ball_summary['velocity'])**2 * ball_summary['velocity']
+			acc += coef*(target-own_summary['position'])/dist(target,own_summary['position'])**3
 
 	pos = own_summary['position']
 	boundary_points = [np.array([pos[0],7.5]),np.array([pos[0],-7.5]),np.array([14,pos[1]]),np.array([-14,pos[1]])]
@@ -43,11 +48,12 @@ def basic_forces(own,player_summaries,ball_summary,ball):
 	if ball is not None and not own.passing:
 		li = can_pass_to(own_summary,player_summaries)
 		#print('pospas',len(li))
-		if len(li)>0 and random.random()<0.005:
+		if len(li)>0 and random.random()<0.05:
 			print('pass')
 			own.passing = True
+			own.has_possession = False
 			elmt = random.sample(li,1)[0]
-			ball.set_acceleration(10*(elmt['position']-ball_summary['position']))
+			ball.set_acceleration(50*(elmt['position']-ball_summary['position']))
 		else:
 			ball.set_acceleration(100*(own_summary['velocity']-ball_summary['velocity']))
 

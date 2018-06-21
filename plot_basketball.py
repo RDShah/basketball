@@ -61,6 +61,5 @@ def test_location_generator(i):
 
 g = main.Game()
 
-
 animate_basketball(g.step)
 

@@ -17,8 +17,9 @@ class Player(object):
         self.acceleration = acceleration
         #self.history = [(x,y)]
         self.max_velocity = 3#kwargs['max_velocity']
-        self.max_acceleration = 10#kwargs['max_acceleration']
+        self.max_acceleration = 20#kwargs['max_acceleration']
         self.passing = False
+        self.has_possession = False
 
     def step(self):
         self.position += dt*self.velocity
@@ -27,11 +28,17 @@ class Player(object):
         self.velocity = clip_norm(self.velocity,self.max_velocity)
 
     def action(self,player_summaries,ball_summary,ball): # None is passed if the player doesn't have possession
+        self.has_possession = ball is not None
         self.acceleration = 10*strategies.basic_forces(self,player_summaries,ball_summary,ball)
         self.acceleration = clip_norm(self.acceleration,self.max_acceleration)
 
     def get_summary(self):
-        return {'position':self.position,'velocity':self.velocity,'team':self.home,'passing':self.passing}
+        return {
+        'position':self.position,
+        'velocity':self.velocity,
+        'team':self.home,
+        'passing':self.passing,
+        'possession':self.has_possession}
 
 
 

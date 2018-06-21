@@ -22,4 +22,8 @@ class Ball:
 			self.velocity = np.zeros(2)
 
 	def get_summary(self):
-		return {'position':self.position,'velocity':self.velocity}
+		return {
+		'position':self.position,
+		'velocity':self.velocity,
+		'possession':self.is_in_possession
+		}

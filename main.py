@@ -2,6 +2,7 @@ from constants import dt
 from ball import Ball
 from player import Player
 from utilz import dist
+import numpy as np
 
 class Game:
 	def __init__(self,players=None,ball=None):
