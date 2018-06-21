@@ -6,13 +6,13 @@ import numpy as np
 
 class Game:
 	def __init__(self,players=None,ball=None):
-		self.players = players or [Player('home') for _ in range(5)]+[Player('away') for _ in range(5)]# list
+		self.players = players or [Player(_,'home') for _ in range(5)]+[Player(_,'away') for _ in range(5)]# list
 		self.ball = ball or Ball()
 
 	def index_of_player_with_possession(self): # right now, possesion is assigned to the player closes to the ball, if that distance is less than 0.5 meters
 		distances_from_ball = [dist(player.position,self.ball.position) for player in self.players]
 		min_dist = min(distances_from_ball)
-		return distances_from_ball.index(min_dist) if min_dist < 0.5 else -1
+		return distances_from_ball.index(min_dist) if min_dist < 1 else -1
 
 	def step(self,bad):
 		j = self.index_of_player_with_possession()
@@ -28,5 +28,7 @@ class Game:
 			# 	self.ball.set_acceleration(self.players[j].set_balls_acceleration(list_of_summaries[:i]+list_of_summaries[i+1:],self.ball.get_summary())) #if has possession, decide balls acceleration
 			self.players[i].step() # update posision and velocity
 		self.ball.step()
+
+		print(np.linalg.norm(self.ball.velocity))
 
 		return [tuple(x['position']) for x in list_of_summaries] + [tuple(self.ball.get_summary()['position'])]

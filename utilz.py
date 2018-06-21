@@ -14,3 +14,6 @@ def random_location_on_court():
 
 def cos_theta(a,b):
 	return a.dot(b)/(np.linalg.norm(a)*np.linalg.norm(b))
+
+def opposite(team):
+	return 'home' if team == 'away' else 'away'

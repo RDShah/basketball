@@ -5,21 +5,22 @@ from utilz import clip_norm,random_location_on_court,dist
 import strategies
 
 class Player(object):
-    def __init__(self,home_or_away,
+    def __init__(self,i,home_or_away,
         position=None,
         velocity=np.zeros(2),
         acceleration=np.zeros(2),
         **kwargs):
 
-        self.home = home_or_away.lower() == 'home'
+        self.team = home_or_away.lower()
         self.position = position or random_location_on_court()
         self.velocity = velocity
         self.acceleration = acceleration
         #self.history = [(x,y)]
         self.max_velocity = 3#kwargs['max_velocity']
-        self.max_acceleration = 20#kwargs['max_acceleration']
+        self.max_acceleration = 100#kwargs['max_acceleration']
         self.passing = False
         self.has_possession = False
+        self.index = i
 
     def step(self):
         self.position += dt*self.velocity
@@ -29,16 +30,17 @@ class Player(object):
 
     def action(self,player_summaries,ball_summary,ball): # None is passed if the player doesn't have possession
         self.has_possession = ball is not None
-        self.acceleration = 10*strategies.basic_forces(self,player_summaries,ball_summary,ball)
+        self.acceleration = 10*strategies.basic_forces2(self,player_summaries,ball_summary,ball)
         self.acceleration = clip_norm(self.acceleration,self.max_acceleration)
 
     def get_summary(self):
         return {
         'position':self.position,
         'velocity':self.velocity,
-        'team':self.home,
+        'team':self.team,
         'passing':self.passing,
-        'possession':self.has_possession}
+        'possession':self.has_possession,
+        'index':self.index}
 
 
 
