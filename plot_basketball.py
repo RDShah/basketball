@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 from matplotlib import animation
 import random
 
+import main
+
 fig = plt.figure()
 pause = False
 
@@ -53,5 +55,8 @@ def animate_basketball(location_generator):
 def test_location_generator(i):
 	return [(random.uniform(-14, 14), random.uniform(-7.5, 7.5)) for _ in range(11)]
 
-animate_basketball(test_location_generator)
+g = main.Game()
+
+
+animate_basketball(g.step)
 

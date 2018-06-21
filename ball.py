@@ -1,5 +1,6 @@
 from constants import dt
 import numpy as np
+from utilz import *
 
 class Ball:
 	def __init__(self):
@@ -15,6 +16,10 @@ class Ball:
 	def step(self):
 		self.position += dt*self.velocity
 		self.velocity += dt*self.acceleration
+
+		if not in_bounds(self.position):
+			self.position = np.zeros(2)
+			self.velocity = np.zeros(2)
 
 	def get_summary(self):
 		return {'position':self.position,'velocity':self.velocity}
