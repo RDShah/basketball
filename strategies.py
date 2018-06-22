@@ -4,9 +4,9 @@ import numpy as np
 from constants import basket
 
 def is_blocking(passer,passee,blocker):
-	return cos_theta(
+	return False and cos_theta(
 		blocker['position']-passer['position'],
-		passee['position']-passer['position'])>0.9
+		passee['position']-passer['position'])>0.8 and dist(passer['position'],blocker['position']) < dist(passer['position'],passee['position'])
 
 def is_open(passer,passee,player_summaries):
 	for blocker in player_summaries:
@@ -28,9 +28,13 @@ def basic_forces2(own,player_summaries,ball_summary,ball):
 	for player in player_summaries + [own.get_summary()]:
 		if player['possession'] and player['team'] == own.team:
 			state = 'offense'
+			if player['index'] != own.index:
+				own.passing = False
 			break
 		elif player['possession']:
 			state = 'defense'
+			own.passing = False
+			break
 	pos = own.position
 	point_charges = [
 	(np.array([pos[0],7.5]),-5),
@@ -38,10 +42,17 @@ def basic_forces2(own,player_summaries,ball_summary,ball):
 	(np.array([14,pos[1]]),-5),
 	(np.array([-14,pos[1]]),-5)]
 
+	# if own.index==0:
+	# 	print(state)
 	if state == 'offense':
-		#point_charges.append((basket[own.team],10))
+		point_charges.append((basket[own.team],10))
+		# for player in player_summaries:
+		# 	point_charges.append((player['position'],-10))
+		li = [dist(player['position'],own.position) for player in player_summaries]
 		for player in player_summaries:
-			point_charges.append((player['position'],-10))
+			if dist(player['position'],own.position) < min(li)*1.1 + 2 or player['team'] == own.team:
+				point_charges.append((player['position'],-10))
+
 	elif state == 'defense':
 		for player in player_summaries:
 			if player['index']%5 == own.index%5:
@@ -52,7 +63,11 @@ def basic_forces2(own,player_summaries,ball_summary,ball):
 		# 	else:
 		# 		point_charges.append((player['position'],1))
 	elif state == 'get the ball':
-		point_charges.append((ball_summary['position'],100))
+		if np.linalg.norm(ball_summary['velocity']) < 5:
+			point_charges.append((ball_summary['position'],100))
+		else:
+			target = ball_summary['position'] + (own.position-ball_summary['position']).dot(ball_summary['velocity'])/np.linalg.norm(ball_summary['velocity'])**2 * ball_summary['velocity']
+			point_charges.append((target,100))
 
 	acc = np.zeros(2)
 	for point,charge in point_charges:
@@ -61,10 +76,11 @@ def basic_forces2(own,player_summaries,ball_summary,ball):
 	if state == 'offense':
 		acc += basket[own.team]-own.position
 
-	if ball is not None and not own.passing:
+	if ball is not None and own.has_possession and not own.passing:
 		li = can_pass_to(own.get_summary(),player_summaries)
-		if len(li)>0 and random.random()<0.05:
-			print('pass')
+		print(len(li))
+		if len(li)>0 and random.random()<0.1:
+			print('pass',random.random())
 			own.passing = True
 			own.has_possession = False
 			elmt = random.sample(li,1)[0]

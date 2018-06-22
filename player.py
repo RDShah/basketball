@@ -29,7 +29,7 @@ class Player(object):
         self.velocity = clip_norm(self.velocity,self.max_velocity)
 
     def action(self,player_summaries,ball_summary,ball): # None is passed if the player doesn't have possession
-        self.has_possession = ball is not None
+        self.has_possession = ball is not None and not self.passing
         self.acceleration = 10*strategies.basic_forces2(self,player_summaries,ball_summary,ball)
         self.acceleration = clip_norm(self.acceleration,self.max_acceleration)
 
